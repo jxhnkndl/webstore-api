@@ -2,10 +2,48 @@ const router = require('express').Router();
 const { Product, Category } = require('../../models');
 
 // GET all products -> /api/products
-router.get('/', async (req, res) => {});
+router.get('/', async (req, res) => {
+  try {
+    const dbProductData = await Product.findAll({
+      include: [
+        {
+          model: Category,
+          attributes: ['id', 'category_name']
+        }
+      ]
+    });
+
+    res.json(dbProductData);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 // GET product by id -> /api/products/:id
-router.get('/:id', async (req, res) => {});
+router.get('/:id', async (req, res) => {
+  try {
+    const dbProductData = await Product.findOne({
+      where: { id: req.params.id },
+      include: [
+        {
+          model: Category,
+          attributes: ['id', 'category_name']
+        }
+      ]
+    });
+
+    if (!dbProductData) {
+      res.status(404).json({ msg: 'Product not found' });
+      return;
+    }
+
+    res.json(dbProductData);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 // POST new product -> /api/products
 router.post('/', async (req, res) => {});
