@@ -1,10 +1,17 @@
 const router = require('express').Router();
-const { Category } = require('../../models');
+const { Category, Product } = require('../../models');
 
 // GET all categories -> /api/categories
 router.get('/', async (req, res) => {
   try {
-    const dbCategoryData = await Category.findAll();
+    const dbCategoryData = await Category.findAll({
+      include: [
+        {
+          model: Product,
+          attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+        }
+      ]
+    });
 
     res.json(dbCategoryData);
   } catch (err) {
@@ -17,7 +24,13 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const dbCategoryData = await Category.findOne({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
+      include: [
+        {
+          model: Product,
+          attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
+        }
+      ]
     });
 
     res.json(dbCategoryData);
