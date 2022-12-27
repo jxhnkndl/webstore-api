@@ -46,7 +46,21 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST new product -> /api/products
-router.post('/', async (req, res) => {});
+router.post('/', async (req, res) => {
+  try {
+    const dbProductData = await Product.create({
+      product_name: req.body.product_name,
+      price: req.body.price,
+      stock: req.body.stock,
+      category_id: req.body.category_id
+    });
+
+    res.json(dbProductData);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
 
 // UPDATE product by id -> /api/products/:id
 router.put('/:id', async (req, res) => {});
