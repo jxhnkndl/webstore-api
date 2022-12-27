@@ -1,3 +1,4 @@
 const Category = require('./Category');
+const Tag = require('./Tag');
 
-module.exports = { Category };
+module.exports = { Category, Tag };
